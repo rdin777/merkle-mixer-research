@@ -1,66 +1,30 @@
-## Foundry
+# 🌪️ Merkle-Based Privacy Mixer Research
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+This repository contains a research-oriented implementation of a non-custodial privacy mixer using **Merkle Trees**, built with **Solidity** and tested via **Foundry**.
 
-Foundry consists of:
+## 📌 Overview
+The project explores the fundamental building blocks of blockchain privacy protocols (like Tornado Cash), focusing on the separation of deposit and withdrawal identity through cryptographic commitments.
 
-- **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
-- **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
-- **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
-- **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+### Key Features
+* **Fixed Denomination:** Standardized 1 ETH deposits to ensure anonymity sets.
+* **Merkle Tree Verification:** Uses a 3-level Merkle Tree (8 leaves) for efficient state management.
+* **Double-Spending Protection:** Implementation of `nullifierHashes` to prevent draining the pool.
+* **Foundry Native:** Comprehensive test suite including Merkle proof generation and gas analysis.
 
-## Documentation
+## 🛠️ Technical Deep Dive
+The mixer utilizes a **Commitment Scheme**. Users deposit funds by submitting a hash of a secret. To withdraw, they must provide a valid **Merkle Proof** demonstrating that their commitment is part of the registered Merkle Root, without revealing which specific leaf belongs to them.
 
-https://book.getfoundry.sh/
+### Gas Analysis
+* **Deposit:** High gas cost due to Merkle Tree state updates (SSTORE).
+* **Withdrawal:** Optimized through proof verification rather than full tree traversal.
 
-## Usage
+## 🚀 Getting Started
 
-### Build
+### Prerequisites
+* [Foundry](https://book.getfoundry.sh/getting-started/installation)
 
-```shell
-$ forge build
-```
-
-### Test
-
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+### Installation
+```bash
+git clone [https://github.com/rdin777/merkle-mixer-research](https://github.com/rdin777/merkle-mixer-research)
+cd merkle-mixer-research
+forge build
