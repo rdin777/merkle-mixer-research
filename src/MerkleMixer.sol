@@ -7,6 +7,22 @@ contract MerkleMixer {
     bytes32 public root;
     mapping(bytes32 => bool) public nullifierHashes;
 
+error AlreadySpent();
+error InvalidProof();
+
+    function withdraw(bytes32[] calldata proof, bytes32 leaf, bytes32 nullifierHash, address payable receiver) external {
+    // 1. Check
+    if (nullifierHashes[nullifierHash]) revert AlreadySpent();
+    
+    // 2. Verify Merkle Proof (псевдокод)
+    // if (!MerkleProof.verify(proof, root, leaf)) revert InvalidProof();
+
+    // 3. Effects
+    nullifierHashes[nullifierHash] = true;
+
+    // 4. Interaction
+    receiver.transfer(1 ether);
+}
     function deposit(bytes32 _commitment) external payable {
         require(msg.value == DENOMINATION, "Send 1 ETH");
         require(leaves.length < 8, "Full");
