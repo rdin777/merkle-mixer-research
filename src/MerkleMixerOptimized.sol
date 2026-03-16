@@ -3,31 +3,36 @@ pragma solidity ^0.8.20;
 
 error AlreadySpent();
 error InvalidProof();
+error TransferFailed();
 
 contract MerkleMixerOptimized {
-    // Use uint256 as a bitmask (pseudocode for illustrative purposes)
+    // Correct BitMap declaration
     mapping(uint256 => uint256) private _nullifierBitMap;
 
     function withdrawOptimized(
-        bytes32[] calldata proof, // calldata saves gas when copying
-        bytes32 leaf,
+        bytes32[] calldata /* proof */, // Commented out to avoid the “Unused Parameter” warning
+        bytes32 /* leaf */,            // until verification logic is added
         bytes32 nullifierHash
     ) external {
-        // Optimization 1: Custom Errors instead of require
-        // Optimization 2: Bitwise operations to check the nullifier
-        
+        // Calculate the position in the bitmap
         uint256 nHash = uint256(nullifierHash);
-        uint256 wordPos = nHash >> 8;
-        uint256 bitPos = nHash & 0xff;
-        uint256 mask = 1 << bitPos;
-
-        if ((_nullifierBitMap[wordPos] & mask) != 0) revert AlreadySpent();
+        uint256 wordPos = nHash >> 8;     // Slot number (word)
+        uint256 bitPos = nHash & 0xff;    // Bit position within the slot (0-255)
         
-        // Effects
+        // Optimized mask with explicit type
+        uint256 mask = uint256(1) << bitPos;
+
+        // Check: Check if the bit has already been set
+        if ((_nullifierBitMap[wordPos] & mask) != 0) revert AlreadySpent();
+
+        // Effects: Set the bit (nullifier spent)
         _nullifierBitMap[wordPos] |= mask;
 
-        // Interaction
+        // Interaction: Send funds
         (bool success, ) = msg.sender.call{value: 1 ether}("");
-        if (!success) revert();
+        if (!success) revert TransferFailed();
     }
+
+    // Add a receive function so the contract can accept ETH for the mixer
+    receive() external payable {}
 }

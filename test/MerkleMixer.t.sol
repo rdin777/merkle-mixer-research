@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import “forge-std/Test.sol”;
-import “../src/MerkleMixer.sol”;
+import "forge-std/Test.sol";
+import "../src/MerkleMixer.sol";
 
 contract MerkleMixerTest is Test {
     MerkleMixer public mixer;
@@ -17,10 +17,10 @@ contract MerkleMixerTest is Test {
     // Double-spending test
     function test_DoubleSpendingReverts() public {
         bytes32[] memory proof = new bytes32[](1);
-        proof[0] = keccak256(“nodes”);
-        bytes32 leaf = keccak256(“leaf”);
-        bytes32 nullifier = keccak256(“secret”);
-        address payable user = payable(makeAddr(“user”));
+        proof[0] = keccak256("nodes");
+        bytes32 leaf = keccak256("leaf");
+        bytes32 nullifier = keccak256("secret");
+        address payable user = payable(makeAddr("user"));
 
         // 1. First withdrawal attempt—should succeed
         mixer.withdraw(proof, leaf, nullifier, user);
@@ -32,4 +32,3 @@ contract MerkleMixerTest is Test {
     }
 }
 
-Translated with DeepL.com (free version)
